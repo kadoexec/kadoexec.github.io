@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { profile } from './data/profile'
+import { profileEN } from './data/profileEN'
+import { translations } from './data/translations'
 import { StarfieldBackground } from './components/StarfieldBackground'
 import './App.css'
 
@@ -37,6 +39,10 @@ const RocketIcon = () => (
 function App() {
     const [scrolled, setScrolled] = useState(false)
     const [theme, setTheme] = useState('dark')
+    const [language, setLanguage] = useState('pt')
+
+    const currentProfile = language === 'pt' ? profile : profileEN
+    const t = translations[language]
 
     useEffect(() => {
         const handleScroll = () => {
@@ -76,6 +82,10 @@ function App() {
         setTheme(prev => prev === 'dark' ? 'light' : 'dark')
     }
 
+    const toggleLanguage = () => {
+        setLanguage(prev => prev === 'pt' ? 'en' : 'pt')
+    }
+
     const experienceIcons = [BriefcaseIcon, RocketIcon, TrendingIcon]
 
     return (
@@ -86,11 +96,14 @@ function App() {
                 <div className="nav-content">
                     <span className="logo">RC.</span>
                     <div className="nav-links">
-                        <a href="#about">Sobre</a>
-                        <a href="#projects">Projetos</a>
-                        <a href="#experience">Experiência</a>
-                        <a href="#skills">Habilidades</a>
-                        <a href="#contact">Contato</a>
+                        <a href="#about">{t.nav.about}</a>
+                        <a href="#projects">{t.nav.projects}</a>
+                        <a href="#experience">{t.nav.experience}</a>
+                        <a href="#skills">{t.nav.skills}</a>
+                        <a href="#contact">{t.nav.contact}</a>
+                        <button className="lang-toggle" onClick={toggleLanguage} aria-label="Toggle language">
+                            {language === 'pt' ? 'EN' : 'PT'}
+                        </button>
                         <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
                             {theme === 'dark' ? '☀️' : '🌙'}
                         </button>
@@ -101,25 +114,25 @@ function App() {
             <section id="about" className="section about-hero">
                 <div className="about-hero-container animate-on-scroll">
                     <div className="about-hero-left">
-                        <div className="about-label">👋 Olá, eu sou</div>
+                        <div className="about-label">👋 {t.hero.greeting}</div>
                         <h2 className="about-name">Ricardo Crescêncio</h2>
                         <h3 className="about-role">
                             <span className="highlight-text">Software Engineer</span> | Martech Specialist
                         </h3>
                         <p className="about-intro">
-                            {profile.about.split('\n\n')[0]}
+                            {currentProfile.about.split('\n\n')[0]}
                         </p>
 
                         <div className="about-tags">
-                            <span className="tag">AEM</span>
-                            <span className="tag">Martech</span>
-                            <span className="tag">Automation</span>
+                            <span className="tag">{t.about.specialty1}</span>
+                            <span className="tag">{t.about.specialty2}</span>
+                            <span className="tag">{t.about.specialty3}</span>
                             <span className="tag">Integrations</span>
                         </div>
 
                         <div className="about-cta">
                             <a href="#contact" className="cta-button">
-                                <span>Vamos conversar</span>
+                                <span>{t.hero.cta}</span>
                                 <span className="arrow">→</span>
                             </a>
                         </div>
@@ -145,10 +158,10 @@ function App() {
 
                 {/* Detailed About */}
                 <div className="about-details glass animate-on-scroll">
-                    <h3>Mais sobre mim</h3>
+                    <h3>{t.hero.moreAbout}</h3>
                     <div className="about-grid">
                         <div className="about-detail-text">
-                            {profile.about.split('\n\n').slice(1).map((para, i) => (
+                            {currentProfile.about.split('\n\n').slice(1).map((para, i) => (
                                 <p key={i}>{para}</p>
                             ))}
                         </div>
@@ -160,29 +173,29 @@ function App() {
             <section className="section stats-section">
                 <div className="stats-grid animate-on-scroll">
                     <div className="stat-card glass">
-                        <div className="stat-number">{profile.stats.experience}+</div>
-                        <div className="stat-label">Anos de Experiência</div>
+                        <div className="stat-number">{currentProfile.stats.experience}+</div>
+                        <div className="stat-label">{t.stats.experience}</div>
                     </div>
                     <div className="stat-card glass">
-                        <div className="stat-number">{profile.stats.projects}+</div>
-                        <div className="stat-label">Projetos Concluídos</div>
+                        <div className="stat-number">{currentProfile.stats.projects}+</div>
+                        <div className="stat-label">{t.stats.projects}</div>
                     </div>
                     <div className="stat-card glass">
-                        <div className="stat-number">{profile.stats.technologies}+</div>
-                        <div className="stat-label">Tecnologias</div>
+                        <div className="stat-number">{currentProfile.stats.technologies}+</div>
+                        <div className="stat-label">{t.stats.technologies}</div>
                     </div>
                     <div className="stat-card glass">
-                        <div className="stat-number">{profile.stats.certifications}+</div>
-                        <div className="stat-label">Certificações</div>
+                        <div className="stat-number">{currentProfile.stats.certifications}+</div>
+                        <div className="stat-label">{t.stats.certifications}</div>
                     </div>
                 </div>
             </section>
 
             {/* Projects Section */}
             <section id="projects" className="section">
-                <h3 className="animate-on-scroll">Projetos</h3>
+                <h3 className="animate-on-scroll">{t.projects.title}</h3>
                 <div className="projects-grid">
-                    {profile.projects.map((project, i) => (
+                    {currentProfile.projects.map((project, i) => (
                         <div key={i} className="project-card glass animate-on-scroll">
                             <div className="project-header">
                                 <h4>{project.name}</h4>
@@ -218,9 +231,9 @@ function App() {
 
             {/* Education Section */}
             <section id="education" className="section">
-                <h3 className="animate-on-scroll">Formação Acadêmica</h3>
+                <h3 className="animate-on-scroll">{t.education.title}</h3>
                 <div className="education-timeline">
-                    {profile.education.map((edu, i) => (
+                    {currentProfile.education.map((edu, i) => (
                         <div key={i} className="education-card glass animate-on-scroll">
                             <div className="education-icon">🎓</div>
                             <div className="education-content">
@@ -235,9 +248,9 @@ function App() {
             </section>
 
             <section id="experience" className="section">
-                <h3 className="animate-on-scroll">Experiência Profissional</h3>
+                <h3 className="animate-on-scroll">{t.experience.title}</h3>
                 <div className="experience-grid">
-                    {profile.experience.map((exp, i) => {
+                    {currentProfile.experience.map((exp, i) => {
                         const Icon = experienceIcons[i % experienceIcons.length]
                         return (
                             <div key={i} className="experience-card-modern animate-on-scroll">
@@ -264,15 +277,15 @@ function App() {
             </section>
 
             <section id="skills" className="section">
-                <h3 className="animate-on-scroll">Habilidades</h3>
+                <h3 className="animate-on-scroll">{t.skills.title}</h3>
                 <div className="skills-grid-modern">
                     <div className="skill-category-card animate-on-scroll">
                         <div className="card-icon">
                             <CodeIcon />
                         </div>
-                        <h4>Technical Skills</h4>
+                        <h4>{t.skills.technical}</h4>
                         <div className="pills">
-                            {profile.skills.technical.map(s => <span key={s} className="pill">{s}</span>)}
+                            {currentProfile.skills.technical.map(s => <span key={s} className="pill">{s}</span>)}
                         </div>
                     </div>
 
@@ -280,9 +293,9 @@ function App() {
                         <div className="card-icon">
                             <TrendingIcon />
                         </div>
-                        <h4>Martech & Business</h4>
+                        <h4>{t.skills.martech}</h4>
                         <div className="pills">
-                            {profile.skills.marketing.map(s => <span key={s} className="pill">{s}</span>)}
+                            {currentProfile.skills.marketing.map(s => <span key={s} className="pill">{s}</span>)}
                         </div>
                     </div>
                 </div>
@@ -290,7 +303,7 @@ function App() {
 
             {/* Spotify Section */}
             <section className="section spotify-section">
-                <h3 className="animate-on-scroll">🎵 Ouvindo Agora</h3>
+                <h3 className="animate-on-scroll">{t.spotify.title}</h3>
                 <div className="spotify-container glass animate-on-scroll">
                     <iframe
                         style={{ borderRadius: '12px' }}
@@ -306,22 +319,22 @@ function App() {
             </section>
 
             <footer id="contact" className="animate-on-scroll">
-                <h3>Vamos Conversar?</h3>
-                <p>Curioso para saber mais sobre meu trabalho? Entre em contato!</p>
+                <h3>{t.footer.title}</h3>
+                <p>{t.footer.subtitle}</p>
                 <div className="social-links">
-                    <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer" className="social-link">
+                    <a href={currentProfile.links.linkedin} target="_blank" rel="noopener noreferrer" className="social-link">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                         </svg>
                         LinkedIn
                     </a>
-                    <a href={profile.links.github} target="_blank" rel="noopener noreferrer" className="social-link">
+                    <a href={currentProfile.links.github} target="_blank" rel="noopener noreferrer" className="social-link">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                         </svg>
                         GitHub
                     </a>
-                    <a href={profile.links.email} className="social-link">
+                    <a href={currentProfile.links.email} className="social-link">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                             <polyline points="22,6 12,13 2,6"></polyline>
@@ -329,7 +342,7 @@ function App() {
                         Email
                     </a>
                 </div>
-                <p className="copyright">© 2024 Ricardo Crescêncio. Feito com React + ❤️</p>
+                <p className="copyright">{t.footer.copyright}</p>
             </footer>
         </div>
     )
